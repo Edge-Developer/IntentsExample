@@ -2,6 +2,7 @@ package com.edgedevstudio.intentsexample
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ShareCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
@@ -36,12 +37,15 @@ class MainActivity : AppCompatActivity() {
             val stringFromImplicitIntentEditTextView = implicitIntentEditText.text.toString()
             stringFromImplicitIntentEditTextView.trim()
             if (stringFromImplicitIntentEditTextView.length > 1) {
-                val shareBody = stringFromImplicitIntentEditTextView
-                val sharingImplicitIntent = Intent(Intent.ACTION_SEND)
-                sharingImplicitIntent.setType("text/plain")
-                sharingImplicitIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
-                sharingImplicitIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingImplicitIntent, "Title of Share Dialog"))
+                val textToShare = stringFromImplicitIntentEditTextView
+                val mimeType = "text/plain"
+                val subject = "Subject of Content to Share" // you would need a "subject" if a user selects an email app to fulfill the intent
+                val context = this
+                ShareCompat.IntentBuilder.from(context)
+                        .setType(mimeType)
+                        .setSubject(subject)
+                        .setText(textToShare)
+                        .startChooser()
             } else
                 showToastMsg("Input some text to launch an Implicit Intent")
         }
